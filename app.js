@@ -4,11 +4,15 @@ const dbcon = require("./config/dbconfig");
 const app = express();
 const cors = require("cors");
 const { router } = require("./routes");
-const localport = 3001;
+const localport = 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
-app.use("/api",router)
+app.use(
+    cors({
+        origin: "*",
+    })
+);
+app.use("/api", router);
 dbcon.getConnection((err, res) => {
     if (res) {
         console.log("DB connected successfully");
