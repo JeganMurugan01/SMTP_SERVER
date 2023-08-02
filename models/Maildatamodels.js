@@ -31,6 +31,24 @@ const mailmodels = {
             }
         });
     },
+    deletemail(id, callback) {
+        dbcon.query("SELECT * FROM maildata WHERE ID = ?", id, (err, res) => {
+            if (res && res.length > 0) {
+                dbcon.query("DELETE FROM maildata WHERE id=?", id, (err, response) => {
+                    if (response) {
+                        callback({ data: "Mail deleted successfully" });
+                    } else {
+                        callback({ data: "Failed to delete the mail" });
+                    }
+                });
+            } else {
+                callback({ data: "No mail found with the provided ID" });
+            }
+            if (err) {
+                callback({ data: "Check the ID given" });
+            }
+        });
+    },
 };
 
 module.exports = { mailmodels };

@@ -83,6 +83,19 @@ const usermaildata = {
             }
         });
     },
+    deletemail(req,response){
+        const id=req.body.id;
+        mailmodels.deletemail(id,(err,res)=>{
+            if(err)
+            {
+                response.status(400).send(err)
+            }
+            if(res)
+            {
+                response(res)
+            }
+        })
+    }
 };
 
 module.exports = usermaildata;
