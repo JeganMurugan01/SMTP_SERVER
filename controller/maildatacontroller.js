@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const { mailmodels } = require("../models/Maildatamodels");
+const { emailRegexp } = require("../Pageconstants");
 
 const usermaildata = {
     async maildata(req, response) {
@@ -11,7 +12,7 @@ const usermaildata = {
             bcc: req.body.bcc,
             text: req.body.text,
             html: req.body.html,
-            title:req.body.title,
+            title: req.body.title,
         };
 
         async function createTestTransporter() {
@@ -37,46 +38,51 @@ const usermaildata = {
                 subject: maildatareq.subject,
                 title: maildatareq.title,
                 html: maildatareq.html,
-                text:maildatareq.text,
+                text: maildatareq.text,
             };
-
-            const info = await transporter.sendMail(msg);
-            console.log("Message sent: %s", info.messageId);
-            console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-            const url = nodemailer.getTestMessageUrl(info);
-
-            mailmodels.sendingmail(maildatareq, (res) => {
-                response.send(`Email Sent!\nURL : ${url}\nResponse: ${res}`);
-            });
+            if (
+                emailRegexp.test(maildatareq.from) &&
+                emailRegexp.test(maildatareq.to) &&
+                emailRegexp.test(maildatareq.cc) &&
+                emailRegexp.test(maildatareq.bcc)
+            ) {
+                const info = await transporter.sendMail(msg);
+                console.log("Message sent: %s", info.messageId);
+                console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                const url = nodemailer.getTestMessageUrl(info);
+                mailmodels.sendingmail(maildatareq, (res) => {
+                    response.send(`Email Sent!\nURL : ${url}\nResponse: ${res}`);
+                });
+            } else {
+                response.status(400).send({error:"Check the given data "});
+            }
         } catch (error) {
             console.error(error);
             response.status(500).send("Failed to send email.");
         }
     },
-    getmaildata(req,callback) { 
+    getmaildata(req, callback) {
         mailmodels.getmaildatadb((err, res) => {
             if (err) {
-              console.error(err);
-              callback.send("Mail fetch error");
+                console.error(err);
+                callback.send("Mail fetch error");
             } else {
-              callback.send(res);
+                callback.send(res);
             }
-          });
+        });
     },
-    getbyidcontroller(req,response){
+    getbyidcontroller(req, response) {
         const id = req.query.id;
-        
-        mailmodels.getbyid(id,(err,res)=>{
-            if(err)
-            {
-                response.send(err)
+
+        mailmodels.getbyid(id, (err, res) => {
+            if (err) {
+                response.send(err);
             }
-            if(res)
-            {
-                response.send(res)
+            if (res) {
+                response.send(res);
             }
-        })
-    }
+        });
+    },
 };
 
 module.exports = usermaildata;
