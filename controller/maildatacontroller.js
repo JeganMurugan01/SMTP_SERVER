@@ -60,6 +60,20 @@ const usermaildata = {
             }
           });
     },
+    getbyidcontroller(req,response){
+        const id = req.query.id;
+        
+        mailmodels.getbyid(id,(err,res)=>{
+            if(err)
+            {
+                response.send(err)
+            }
+            if(res)
+            {
+                response.send(res)
+            }
+        })
+    }
 };
 
 module.exports = usermaildata;

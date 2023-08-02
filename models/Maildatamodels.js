@@ -21,13 +21,13 @@ const mailmodels = {
             }
         });
     },
-    getbyid(callback) {
-        dbcon.query("select * from maildata from where id = ?", id, (err, res) => {
+    getbyid(id, callback) {
+        dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
             if (err) {
-                callback(err);
-            }
-            if (res) {
-                callback(res);
+                console.error(err);
+                callback("Error fetching mail by ID");
+            } else {
+                callback(null, res);
             }
         });
     },
