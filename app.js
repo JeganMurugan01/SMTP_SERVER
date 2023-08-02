@@ -7,11 +7,8 @@ const { router } = require("./routes");
 const localport = 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(
-    cors({
-        origin: "*",
-    })
-);
+app.use(cors());
+app.options("*", cors());
 app.use("/api", router);
 dbcon.getConnection((err, res) => {
     if (res) {
