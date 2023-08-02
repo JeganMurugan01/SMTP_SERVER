@@ -11,6 +11,7 @@ const usermaildata = {
             bcc: req.body.bcc,
             text: req.body.text,
             html: req.body.html,
+            title:req.body.title,
         };
 
         async function createTestTransporter() {
@@ -34,7 +35,9 @@ const usermaildata = {
                 cc: maildatareq.cc,
                 bcc: maildatareq.bcc,
                 subject: maildatareq.subject,
+                title: maildatareq.title,
                 html: maildatareq.html,
+                text:maildatareq.text,
             };
 
             const info = await transporter.sendMail(msg);

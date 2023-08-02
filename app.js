@@ -4,7 +4,7 @@ const dbcon = require("./config/dbconfig");
 const app = express();
 const cors = require("cors");
 const { router } = require("./routes");
-const localport = 3000;
+const localport = 3001;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
