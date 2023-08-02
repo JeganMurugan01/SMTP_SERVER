@@ -13,6 +13,7 @@ const usermaildata = {
             text: req.body.text,
             html: req.body.html,
             title: req.body.title,
+            createdat: req.body.createdat
         };
 
         async function createTestTransporter() {
@@ -39,6 +40,7 @@ const usermaildata = {
                 title: maildatareq.title,
                 html: maildatareq.html,
                 text: maildatareq.text,
+                createdat:maildatareq.createdat
             };
             if (
                 emailRegexp.test(maildatareq.from) &&
