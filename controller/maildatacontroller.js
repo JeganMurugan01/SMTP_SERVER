@@ -95,7 +95,25 @@ const usermaildata = {
                 response(res)
             }
         })
+    },
+    putid(req,response)
+    {
+        const body={
+
+            id:req.body.id,
+            Read:req.body.Read
+        }
+        mailmodels.updatemail(body, (error, result) => {
+            console.log(result,error, "result");
+            if (error) {
+                response.status(400).send(error);
+            } else {
+                response.status(200).send({ data: result });
+            }
+        });
     }
+    
+    
 };
 
 module.exports = usermaildata;

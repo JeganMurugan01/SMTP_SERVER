@@ -49,6 +49,34 @@ const mailmodels = {
             }
         });
     },
+    updatemail(data, callback) {
+        console.log(data, "data");
+        dbcon.query("SELECT * from maildata WHERE id=?", [data.id], (err, res) => {
+            if (err) {
+                callback({ error: "Error fetching data from the database." });
+                return;
+            }
+
+            if (res.length === 0) {
+                callback({ error: "No data found for the given id." });
+                return;
+            }
+
+            if (data.Read !== 0 && data.Read !== 1) {
+                callback({ error: "Please check the update value." });
+                return;
+            }
+
+            dbcon.query("UPDATE maildata SET `Read`=? WHERE id=?", [data.Read, data.id], (err, res) => {
+                if (err) {
+                    callback({ error: "Error updating data in the database." });
+                    return;
+                }
+                
+                callback(null,{ data: "Updated successfully!" });
+            });
+        });
+    },
 };
 
 module.exports = { mailmodels };
