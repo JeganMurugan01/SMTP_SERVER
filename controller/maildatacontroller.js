@@ -5,14 +5,14 @@ const { emailRegexp } = require("../Pageconstants");
 const usermaildata = {
     async maildata(req, response) {
         const maildatareq = {
-            from: req.body.from,
-            to: req.body.to,
-            subject: req.body.subject,
-            cc: req.body.cc,
-            bcc: req.body.bcc,
-            text: req.body.text,
-            html: req.body.html,
-            title: req.body.title,
+            from: req.body.From,
+            to: req.body.To,
+            subject: req.body.Subject,
+            cc: req.body.Cc,
+            bcc: req.body.Bcc,
+            text: req.body.Text,
+            html: req.body.Html,
+            title: req.body.Title,
         };
 
         async function createTestTransporter() {
