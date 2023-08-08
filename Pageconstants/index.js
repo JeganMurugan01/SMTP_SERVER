@@ -15,4 +15,4 @@ function isStrongPassword(password) {
     return passwordRegex.test(password);
 }
 
-module.exports = { emailRegexp, isValidMobileNumber, isValidPincode,isStrongPassword};
+module.exports = { emailRegexp, isValidMobileNumber, isValidPincode, isStrongPassword };

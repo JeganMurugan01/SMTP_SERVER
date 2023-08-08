@@ -13,8 +13,9 @@ const usermaildata = {
             text: req.body.Text,
             html: req.body.Html,
             title: req.body.Title,
+            createdby: req.body.CreatedBy,
+            userid: req.body.userid,
         };
-
         async function createTestTransporter() {
             let testAccount = await nodemailer.createTestAccount();
             return nodemailer.createTransport({
@@ -40,34 +41,30 @@ const usermaildata = {
                 html: maildatareq.html,
                 text: maildatareq.text,
             };
-            if (
-                emailRegexp.test(maildatareq.from) &&
-                emailRegexp.test(maildatareq.to) &&
-                emailRegexp.test(maildatareq.cc) &&
-                emailRegexp.test(maildatareq.bcc)
-            ) {
+            if (emailRegexp.test(maildatareq.from) && emailRegexp.test(maildatareq.to)) {
                 const info = await transporter.sendMail(msg);
                 console.log("Message sent: %s", info.messageId);
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-                const url = nodemailer.getTestMessageUrl(info);
                 mailmodels.sendingmail(maildatareq, (res) => {
-                    response.send(`Email Sent!\nURL : ${url}\nResponse: ${res}`);
+                    response.status(200).send({ Response: res });
                 });
             } else {
-                response.status(400).send({error:"Check the given data "});
+                response.status(400).send({ error: "Check the given data " });
             }
         } catch (error) {
             console.error(error);
             response.status(500).send("Failed to send email.");
         }
     },
-    getmaildata(req, callback) {
-        mailmodels.getmaildatadb((err, res) => {
+    getmaildata(req, res) {
+        const id = req.query.id;
+        console.log(id, "id from controler");
+        mailmodels.getmaildatadb(id, (err, Result) => {
             if (err) {
                 console.error(err);
-                callback.send("Mail fetch error");
+                res.send("Mail fetch error");
             } else {
-                callback.send(res);
+                res.send(Result);
             }
         });
     },
@@ -83,37 +80,31 @@ const usermaildata = {
             }
         });
     },
-    deletemail(req,response){
-        const id=req.body.id;
-        mailmodels.deletemail(id,(err,res)=>{
-            if(err)
-            {
-                response.status(400).send(err)
+    deletemail(req, response) {
+        const id = req.body.id;
+        mailmodels.deletemail(id, (err, res) => {
+            if (err) {
+                response(err);
             }
-            if(res)
-            {
-                response(res)
+            if (res) {
+                response(res);
             }
-        })
+        });
     },
-    putid(req,response)
-    {
-        const body={
-
-            id:req.body.id,
-            Read:req.body.Read
-        }
+    putid(req, response) {
+        const body = {
+            id: req.body.id,
+            Read: req.body.Read,
+        };
         mailmodels.updatemail(body, (error, result) => {
-            console.log(result,error, "result");
+            console.log(result, error, "result");
             if (error) {
                 response.status(400).send(error);
             } else {
                 response.status(200).send({ data: result });
             }
         });
-    }
-    
-    
+    },
 };
 
 module.exports = usermaildata;

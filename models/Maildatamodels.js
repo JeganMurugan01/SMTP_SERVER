@@ -11,15 +11,24 @@ const mailmodels = {
             }
         });
     },
-    getmaildatadb(callback) {
-        dbcon.query("SELECT * FROM maildata", (err, res) => {
-            if (err) {
-                console.error(err);
-                callback("Mail fetch error");
-            } else {
-                callback(null, res);
+    getmaildatadb(id, callback) {
+        console.log(id,"id");
+        dbcon.query(
+            `SELECT maildata.*
+            FROM Login
+            LEFT JOIN maildata ON maildata.to = Login.mailid
+            WHERE Login.user_id = ?;
+            `,
+            [id],
+            (err, res) => {
+                if (err) {
+                    console.error(err);
+                    callback("Mail fetch error");
+                } else {
+                    callback(null, res);
+                }
             }
-        });
+        );
     },
     getbyid(id, callback) {
         dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
@@ -72,8 +81,8 @@ const mailmodels = {
                     callback({ error: "Error updating data in the database." });
                     return;
                 }
-                
-                callback(null,{ data: "Updated successfully!" });
+
+                callback(null, { data: "Updated successfully!" });
             });
         });
     },

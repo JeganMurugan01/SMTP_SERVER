@@ -13,14 +13,12 @@
   },
   "author": "Jegan",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JeganMurugan01/Node_SMTP/issues"
-  },
-  "homepage": "https://github.com/JeganMurugan01/Node_SMTP#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
     "mailparser": "^3.6.5",
     "mysql2": "^3.5.2",
     "nodemon": "^3.0.1",
