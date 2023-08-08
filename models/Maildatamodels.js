@@ -11,15 +11,24 @@ const mailmodels = {
             }
         });
     },
-    getmaildatadb(callback) {
-        dbcon.query("SELECT * FROM maildata", (err, res) => {
-            if (err) {
-                console.error(err);
-                callback("Mail fetch error");
-            } else {
-                callback(null, res);
+    getmaildatadb(id, callback) {
+        console.log(id,"id");
+        dbcon.query(
+            `SELECT maildata.*
+            FROM Login
+            LEFT JOIN maildata ON maildata.to = Login.mailid
+            WHERE Login.user_id = ?;
+            `,
+            [id],
+            (err, res) => {
+                if (err) {
+                    console.error(err);
+                    callback("Mail fetch error");
+                } else {
+                    callback(null, res);
+                }
             }
-        });
+        );
     },
     getbyid(id, callback) {
         dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
@@ -47,6 +56,34 @@ const mailmodels = {
             if (err) {
                 callback({ data: "Check the ID given" });
             }
+        });
+    },
+    updatemail(data, callback) {
+        console.log(data, "data");
+        dbcon.query("SELECT * from maildata WHERE id=?", [data.id], (err, res) => {
+            if (err) {
+                callback({ error: "Error fetching data from the database." });
+                return;
+            }
+
+            if (res.length === 0) {
+                callback({ error: "No data found for the given id." });
+                return;
+            }
+
+            if (data.Read !== 0 && data.Read !== 1) {
+                callback({ error: "Please check the update value." });
+                return;
+            }
+
+            dbcon.query("UPDATE maildata SET `Read`=? WHERE id=?", [data.Read, data.id], (err, res) => {
+                if (err) {
+                    callback({ error: "Error updating data in the database." });
+                    return;
+                }
+
+                callback(null, { data: "Updated successfully!" });
+            });
         });
     },
 };
