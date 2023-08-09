@@ -8,9 +8,9 @@ const Emailfilter = {
                 LEFT JOIN maildata m ON m.to = l.mailid
                 WHERE l.user_id = ?
             ) AS subquery
-            WHERE subquery.subject LIKE CONCAT("%", ?, "%");
+            WHERE subquery.subject LIKE CONCAT("%", ?, "%") OR subquery.title LIKE CONCAT("%", ?, "%");
             `,
-            [id, body],
+            [id, body,body],
             (err, result) => {
                 if (err) {
                     callback(err, null);
