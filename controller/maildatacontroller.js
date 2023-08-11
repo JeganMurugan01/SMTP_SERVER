@@ -17,16 +17,25 @@ const usermaildata = {
             userid: req.body.userid,
         };
         async function createTestTransporter() {
-            let testAccount = await nodemailer.createTestAccount();
-            return nodemailer.createTransport({
-                host: "smtp.ethereal.email",
-                port: 587,
-                secure: false,
-                auth: {
-                    user: testAccount.user,
-                    pass: testAccount.pass,
-                },
-            });
+            try {
+                const transporter = nodemailer.createTransport({
+                    host: "localhost",
+                    port: 25,
+                    secure: false,
+                    auth: {
+                        user: "user",
+                        pass: "Test@1234",
+                    },
+                    tls: {
+                        rejectUnauthorized: false,
+                    },
+                });
+                await transporter.verify();
+                return transporter;
+            } catch (error) {
+                console.error("Error creating transporter:", error);
+                throw error;
+            }
         }
 
         try {
@@ -52,17 +61,14 @@ const usermaildata = {
                 response.status(400).send({ error: "Check the given data " });
             }
         } catch (error) {
-            console.error(error);
+            console.error(error, "error");
             response.status(500).send("Failed to send email.");
         }
     },
-    getmaildata(req, res) {
-        const id = req.query.id;
-        console.log(id, "id from controler");
-        mailmodels.getmaildatadb(id, (err, Result) => {
+    getmaildata(error, res) {
+        mailmodels.getmaildatadb((err, Result) => {
             if (err) {
-                console.error(err);
-                res.send("Mail fetch error");
+                error.send("Mail fetch error");
             } else {
                 res.send(Result);
             }
@@ -84,10 +90,10 @@ const usermaildata = {
         const id = req.body.id;
         mailmodels.deletemail(id, (err, res) => {
             if (err) {
-                response(err);
+                response.send(err);
             }
             if (res) {
-                response(res);
+                response.send(res);
             }
         });
     },
@@ -105,6 +111,28 @@ const usermaildata = {
             }
         });
     },
-};
 
+    gettrashmail(error, callback) {
+        mailmodels.trashmail((err, res) => {
+            if (err) {
+                callback.send(err);
+            }
+            callback.send(res);
+        });
+    },
+    deletetrashmail(err,callback)
+  {
+        mailmodels.deletetrash((err,res)=>{
+            if(err)
+            {
+                callback.send(err)
+            }
+            if(res)
+            {
+                callback.send({data:"deleted successfully"})
+            }
+        })
+  }
+};
+  
 module.exports = usermaildata;

@@ -9,5 +9,7 @@ router.get("/mail", usermaildata.getmaildata);
 router.get("/getmail", usermaildata.getbyidcontroller);
 router.delete("/deletemail",usermaildata.deletemail);
 router.put("/updatestatus",usermaildata.putid);
-router.get("/search",mailfiltercontroller.filter)
+router.get("/search",mailfiltercontroller.filter);
+router.get("/trash",usermaildata.gettrashmail);
+router.delete("/deleteall",usermaildata.deletetrashmail)
 module.exports = router;
