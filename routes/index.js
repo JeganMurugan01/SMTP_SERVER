@@ -4,10 +4,12 @@ const { authenticateToken } = require("../Pageconstants/authverify");
 const { mailfiltercontroller } = require("../controller/Mailfiltercontroller");
 const router = express.Router();
 
-router.post("/mail", authenticateToken, usermaildata.maildata);
-router.get("/mail", authenticateToken, usermaildata.getmaildata);
-router.get("/getmail", authenticateToken, usermaildata.getbyidcontroller);
-router.delete("/deletemail", authenticateToken,usermaildata.deletemail);
-router.put("/updatestatus",authenticateToken,usermaildata.putid);
-router.get("/search",authenticateToken,mailfiltercontroller.filter)
+router.post("/mail", usermaildata.maildata);
+router.get("/mail", usermaildata.getmaildata);
+router.get("/getmail", usermaildata.getbyidcontroller);
+router.delete("/deletemail", usermaildata.deletemail);
+router.put("/updatestatus", usermaildata.putid);
+router.get("/search", mailfiltercontroller.filter);
+router.get("/trash", usermaildata.gettrashmail);
+router.delete("/deleteall", usermaildata.deletetrashmail);
 module.exports = router;

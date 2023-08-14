@@ -11,25 +11,30 @@ const mailmodels = {
             }
         });
     },
-    getmaildatadb(id, callback) {
-        console.log(id,"id");
-        dbcon.query(
-            `SELECT maildata.*
-            FROM Login
-            LEFT JOIN maildata ON maildata.to = Login.mailid
-            WHERE Login.user_id = ?;
-            `,
-            [id],
-            (err, res) => {
-                if (err) {
-                    console.error(err);
-                    callback("Mail fetch error");
-                } else {
-                    callback(null, res);
-                }
+    getmaildatadb(page, limit, callback) {
+        console.log(page, "page value ");
+        console.log(limit, "limit value ");
+        const columns = ["id", "`from`", "`to`", "subject", "cc", "bcc", "html", "text", "title", "createdby"];
+        const columnsStr = columns.join(", ");
+        const offset = (page - 1) * limit;
+
+        dbcon.query(`SELECT ${columnsStr} FROM maildata WHERE NOT tempdel = 1 ORDER BY id DESC LIMIT ? OFFSET ?`, [limit, offset], (err, res) => {
+            if (err) {
+                console.error(err);
+                callback("Mail fetch error");
+            } else {
+                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE NOT tempdel = 1", (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        callback("Mail count fetch error");
+                    } else {
+                        callback(null, { data: res, totalcount: result[0].totalCount });
+                    }
+                });
             }
-        );
+        });
     },
+
     getbyid(id, callback) {
         dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
             if (err) {
@@ -41,25 +46,29 @@ const mailmodels = {
         });
     },
     deletemail(id, callback) {
-        dbcon.query("SELECT * FROM maildata WHERE ID = ?", id, (err, res) => {
+        dbcon.query("SELECT * FROM maildata WHERE id = ?", id, (err, res) => {
+            if (err) {
+                console.error("Error while fetching mail data:", err);
+                callback({ data: "Error while fetching mail data" });
+                return;
+            }
+
             if (res && res.length > 0) {
-                dbcon.query("DELETE FROM maildata WHERE id=?", id, (err, response) => {
-                    if (response) {
-                        callback({ data: "Mail deleted successfully" });
-                    } else {
+                dbcon.query("UPDATE maildata SET tempdel = '1' WHERE id = ?", id, (err, response) => {
+                    if (err) {
+                        console.error("Error while deleting mail:", err);
                         callback({ data: "Failed to delete the mail" });
+                        return;
                     }
+
+                    callback({ data: "Mail deleted successfully" });
                 });
             } else {
                 callback({ data: "No mail found with the provided ID" });
             }
-            if (err) {
-                callback({ data: "Check the ID given" });
-            }
         });
     },
     updatemail(data, callback) {
-        console.log(data, "data");
         dbcon.query("SELECT * from maildata WHERE id=?", [data.id], (err, res) => {
             if (err) {
                 callback({ error: "Error fetching data from the database." });
@@ -84,6 +93,29 @@ const mailmodels = {
 
                 callback(null, { data: "Updated successfully!" });
             });
+        });
+    },
+    trashmail(callback) {
+        const columns = ["id", "`from`", "`to`", "subject", "cc", "bcc", "html", "text", "title", "createdby"];
+        const columnsStr = columns.join(", ");
+        dbcon.query(`SELECT ${columnsStr} FROM maildata where tempdel=1`, (err, res) => {
+            if (err) {
+                callback(err);
+            }
+            callback(res);
+        });
+    },
+    deletetrash(callback) {
+        dbcon.query("DELETE FROM maildata WHERE tempdel = 1", (err, res) => {
+            if (err) {
+                callback(err);
+            } else {
+                if (res.affectedRows > 0) {
+                    callback({ data: "Deleted successfully" });
+                } else {
+                    callback({ data: "No data found" });
+                }
+            }
         });
     },
 };
