@@ -1,4 +1,4 @@
-const dbcon = require('../config/dbconfig.js')
+const dbcon = require("../config/dbconfig.js");
 
 const Emailfilter = {
     mailfilter(body, id, callback) {
@@ -10,7 +10,7 @@ const Emailfilter = {
             ) AS subquery
             WHERE subquery.subject LIKE CONCAT("%", ?, "%") OR subquery.title LIKE CONCAT("%", ?, "%");
             `,
-            [id, body,body],
+            [id, body, body],
             (err, result) => {
                 if (err) {
                     callback(err, null);
@@ -19,7 +19,7 @@ const Emailfilter = {
                 }
             }
         );
-    }
-}
+    },
+};
 
 module.exports = { Emailfilter };

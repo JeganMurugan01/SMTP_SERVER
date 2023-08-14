@@ -11,15 +11,26 @@ const mailmodels = {
             }
         });
     },
-    getmaildatadb(callback) {
+    getmaildatadb(page, limit, callback) {
+        console.log(page, "page value ");
+        console.log(limit, "limit value ");
         const columns = ["id", "`from`", "`to`", "subject", "cc", "bcc", "html", "text", "title", "createdby"];
         const columnsStr = columns.join(", ");
-        dbcon.query(`SELECT ${columnsStr} FROM maildata where not tempdel=1`, (err, res) => {
+        const offset = (page - 1) * limit;
+
+        dbcon.query(`SELECT ${columnsStr} FROM maildata WHERE NOT tempdel = 1 ORDER BY id DESC LIMIT ? OFFSET ?`, [limit, offset], (err, res) => {
             if (err) {
                 console.error(err);
                 callback("Mail fetch error");
             } else {
-                callback(null, res);
+                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE NOT tempdel = 1", (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        callback("Mail count fetch error");
+                    } else {
+                        callback(null, { data: res, totalcount: result[0].totalCount });
+                    }
+                });
             }
         });
     },
@@ -58,7 +69,6 @@ const mailmodels = {
         });
     },
     updatemail(data, callback) {
-        console.log(data, "data");
         dbcon.query("SELECT * from maildata WHERE id=?", [data.id], (err, res) => {
             if (err) {
                 callback({ error: "Error fetching data from the database." });

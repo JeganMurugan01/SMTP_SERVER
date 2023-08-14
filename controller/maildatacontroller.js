@@ -65,10 +65,12 @@ const usermaildata = {
             response.status(500).send("Failed to send email.");
         }
     },
-    getmaildata(error, res) {
-        mailmodels.getmaildatadb((err, Result) => {
+    getmaildata(req, res) {
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.pageLimit);
+        mailmodels.getmaildatadb(page, limit, (err, Result) => {
             if (err) {
-                error.send("Mail fetch error");
+                res.send("Mail fetch error");
             } else {
                 res.send(Result);
             }
@@ -79,9 +81,8 @@ const usermaildata = {
 
         mailmodels.getbyid(id, (err, res) => {
             if (err) {
-                response.send(err);
-            }
-            if (res) {
+                response.status(500).send("Error fetching mail data");
+            } else {
                 response.send(res);
             }
         });
@@ -120,19 +121,16 @@ const usermaildata = {
             callback.send(res);
         });
     },
-    deletetrashmail(err,callback)
-  {
-        mailmodels.deletetrash((err,res)=>{
-            if(err)
-            {
-                callback.send(err)
+    deletetrashmail(err, callback) {
+        mailmodels.deletetrash((err, res) => {
+            if (err) {
+                callback.send(err);
             }
-            if(res)
-            {
-                callback.send({data:"deleted successfully"})
+            if (res) {
+                callback.send({ data: "deleted successfully" });
             }
-        })
-  }
+        });
+    },
 };
-  
+
 module.exports = usermaildata;
