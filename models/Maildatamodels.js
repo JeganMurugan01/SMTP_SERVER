@@ -36,7 +36,7 @@ const mailmodels = {
     },
 
     getbyid(id, callback) {
-        dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
+        dbcon.query("SELECT * FROM maildata WHERE id = ? AND tempdel= 0", [id], (err, res) => {
             if (err) {
                 console.error(err);
                 callback("Error fetching mail by ID");
@@ -46,7 +46,7 @@ const mailmodels = {
         });
     },
     deletemail(id, callback) {
-        dbcon.query("SELECT * FROM maildata WHERE id = ?", id, (err, res) => {
+        dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
             if (err) {
                 console.error("Error while fetching mail data:", err);
                 callback({ data: "Error while fetching mail data" });
@@ -54,7 +54,7 @@ const mailmodels = {
             }
 
             if (res && res.length > 0) {
-                dbcon.query("UPDATE maildata SET tempdel = '1' WHERE id = ?", id, (err, response) => {
+                dbcon.query("UPDATE maildata SET tempdel = '1' WHERE id = ?", [id], (err, response) => {
                     if (err) {
                         console.error("Error while deleting mail:", err);
                         callback({ data: "Failed to delete the mail" });
@@ -68,6 +68,7 @@ const mailmodels = {
             }
         });
     },
+
     updatemail(data, callback) {
         dbcon.query("SELECT * from maildata WHERE id=?", [data.id], (err, res) => {
             if (err) {
