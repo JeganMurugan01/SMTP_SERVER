@@ -14,7 +14,7 @@ const mailmodels = {
     getmaildatadb(page, limit, callback) {
         console.log(page, "page value ");
         console.log(limit, "limit value ");
-        const columns = ["id", "`from`", "`to`", "subject", "cc", "bcc", "html", "text", "title", "createdby"];
+        const columns = ["id", "`from`", "`to`", "subject","`Read`","cc", "bcc", "html", "text", "title", "createdby"];
         const columnsStr = columns.join(", ");
         const offset = (page - 1) * limit;
 
