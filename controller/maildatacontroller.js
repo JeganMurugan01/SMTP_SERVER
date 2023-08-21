@@ -26,12 +26,8 @@ const usermaildata = {
                         user: "user",
                         pass: "Test@1234",
                     },
-                    tls: {
-                        rejectUnauthorized: false,
-                    },
                 });
                 await transporter.verify();
-                console.log(transporter, "transporter");
                 return transporter;
             } catch (error) {
                 console.error("Error creating transporter:", error);
@@ -67,7 +63,7 @@ const usermaildata = {
         }
     },
     getmaildata(req, res) {
-        const page = parseInt(req.query.page);
+        const page = parseInt(req.query.page)
         const limit = parseInt(req.query.pageLimit);
         mailmodels.getmaildatadb(page, limit, (err, Result) => {
             if (err) {
