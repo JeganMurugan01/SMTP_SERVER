@@ -65,7 +65,7 @@ const usermaildata = {
         }
     },
     getmaildata(req, res) {
-        const page = parseInt(req.query.page)
+        const page = parseInt(req.query.page);
         const limit = parseInt(req.query.pageLimit);
         mailmodels.getmaildatadb(page, limit, (err, Result) => {
             if (err) {
@@ -124,13 +124,15 @@ const usermaildata = {
     },
 
     gettrashmail(req, callback) {
-        const page = parseInt(req.query.page)
-        const limit = parseInt(req.query.pageLimit)
-        mailmodels.trashmail(page, limit,(err, res) => {
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.pageLimit);
+        mailmodels.trashmail(page, limit, (err, res) => {
             if (err) {
                 callback.send(err);
             }
-            callback.send(res);
+            if (res) {
+                callback.send(res);
+            }
         });
     },
     deletetrashmail(err, callback) {
