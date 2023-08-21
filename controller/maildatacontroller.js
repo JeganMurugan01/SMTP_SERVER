@@ -28,6 +28,7 @@ const usermaildata = {
                     },
                 });
                 await transporter.verify();
+                console.log(transporter,"transporter")
                 return transporter;
             } catch (error) {
                 console.error("Error creating transporter:", error);
