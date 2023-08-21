@@ -30,14 +30,13 @@ const mailmodels = {
                     } else {
                         dbcon.query("SELECT count(*) AS totalCount FROM maildata WHERE `Read`=0 and tempdel=0", (err, result) => {
                             if (err) {
-                                console.log(err);
+                                console.log("error occuring in count ", err);
                             } else {
                                 const unreadCount = result[0].totalCount;
                                 console.log("Total count:", unreadCount);
-                                callback(null, { data: res, totalcount: page[0].totalCount,unreadcount:unreadCount });
+                                callback(null, { data: res, totalcount: page[0].totalCount, unreadcount: unreadCount });
                             }
                         });
-                        
                     }
                 });
             }
@@ -111,14 +110,18 @@ const mailmodels = {
         dbcon.query(`SELECT ${columnsStr} FROM maildata where tempdel=1`, (err, res) => {
             if (err) {
                 callback(err);
+                console.log("error in trash mail", err);
             }
-            callback(res);
+            if (res) {
+                callback(res);
+            }
         });
     },
     deletetrash(callback) {
         dbcon.query("DELETE FROM maildata WHERE tempdel = 1", (err, res) => {
             if (err) {
                 callback(err);
+                console.log("deltetrash error ", err);
             } else {
                 if (res.affectedRows > 0) {
                     callback({ data: "Deleted successfully" });
