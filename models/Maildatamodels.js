@@ -54,7 +54,9 @@ const mailmodels = {
         });
     },
     gettrsabyid(id, callback) {
-        dbcon.query("SELECT * FROM maildata WHERE id = ? AND tempdel= 1", [id], (err, res) => {
+        const columns = ["id", "`from`", "`to`", "subject", "`Read`", "cc", "bcc", "html", "text", "title", "createdby"];
+        const columnsStr = columns.join(", ");
+        dbcon.query(`SELECT ${columnsStr} FROM maildata WHERE id = ? AND tempdel= 1`, [id], (err, res) => {
             if (err) {
                 console.error(err);
                 callback("Error fetching mail by ID");
@@ -114,7 +116,7 @@ const mailmodels = {
             });
         });
     },
-    trashmail(page, limit,callback) {
+    trashmail(page, limit, callback) {
         console.log(page, "page value ");
         console.log(limit, "limit value ");
         const columns = ["id", "`from`", "`to`", "subject", "`Read`", "cc", "bcc", "html", "text", "title", "createdby"];
@@ -137,10 +139,9 @@ const mailmodels = {
                             } else {
                                 const unreadCount = result[0].totalCount;
                                 console.log("Total count:", unreadCount);
-                                callback(null, { data: res, totalcount: page[0].totalCount,unreadcount:unreadCount });
+                                callback(null, { data: res, totalcount: page[0].totalCount, unreadcount: unreadCount });
                             }
                         });
-                        
                     }
                 });
             }
