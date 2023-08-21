@@ -19,8 +19,8 @@ const usermaildata = {
         async function createTestTransporter() {
             try {
                 const transporter = nodemailer.createTransport({
-                    host: "localhost",
-                    port: 25,
+                    host: "cidctrap.smtp.com",
+                    port: 8000,
                     secure: false,
                     auth: {
                         user: "user",
@@ -31,6 +31,7 @@ const usermaildata = {
                     },
                 });
                 await transporter.verify();
+                console.log(transporter, "transporter");
                 return transporter;
             } catch (error) {
                 console.error("Error creating transporter:", error);
@@ -66,7 +67,7 @@ const usermaildata = {
         }
     },
     getmaildata(req, res) {
-        const page = parseInt(req.query.page)
+        const page = parseInt(req.query.page);
         const limit = parseInt(req.query.pageLimit);
         mailmodels.getmaildatadb(page, limit, (err, Result) => {
             if (err) {
