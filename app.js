@@ -6,7 +6,7 @@ const cors = require("cors");
 const router = require("./routes");
 const authroute = require("./routes/auth");
 
-const localport = 3001;
+const localport = 3002;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
