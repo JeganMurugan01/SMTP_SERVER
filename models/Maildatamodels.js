@@ -14,7 +14,7 @@ const mailmodels = {
     getmaildatadb(page, limit, callback) {
         console.log(page, "page value ");
         console.log(limit, "limit value ");
-        const columns = ["id", "`from`", "`to`", "subject","`Read`","cc", "bcc", "html", "text", "title", "createdby"];
+        const columns = ["id", "`from`", "`to`", "subject", "`Read`", "cc", "bcc", "html", "text", "title", "createdby"];
         const columnsStr = columns.join(", ");
         const offset = (page - 1) * limit;
 
@@ -23,12 +23,21 @@ const mailmodels = {
                 console.error(err);
                 callback("Mail fetch error");
             } else {
-                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE NOT tempdel = 1", (err, result) => {
+                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE NOT tempdel = 1", (err, page) => {
                     if (err) {
                         console.error(err);
                         callback("Mail count fetch error");
                     } else {
-                        callback(null, { data: res, totalcount: result[0].totalCount });
+                        dbcon.query("SELECT count(*) AS totalCount FROM maildata WHERE `Read`=0 and tempdel=0", (err, result) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                const unreadCount = result[0].totalCount;
+                                console.log("Total count:", unreadCount);
+                                callback(null, { data: res, totalcount: page[0].totalCount,unreadcount:unreadCount });
+                            }
+                        });
+                        
                     }
                 });
             }
