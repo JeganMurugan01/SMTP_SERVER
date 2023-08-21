@@ -114,16 +114,35 @@ const mailmodels = {
             });
         });
     },
-    trashmail(callback) {
-        const columns = ["id", "`from`", "`to`", "subject", "cc", "bcc", "html", "text", "title", "createdby"];
+    trashmail(page, limit,callback) {
+        console.log(page, "page value ");
+        console.log(limit, "limit value ");
+        const columns = ["id", "`from`", "`to`", "subject", "`Read`", "cc", "bcc", "html", "text", "title", "createdby"];
         const columnsStr = columns.join(", ");
-        dbcon.query(`SELECT ${columnsStr} FROM maildata where tempdel=1`, (err, res) => {
+        const offset = (page - 1) * limit;
+
+        dbcon.query(`SELECT ${columnsStr} FROM maildata WHERE  tempdel = 1 ORDER BY id DESC LIMIT ? OFFSET ?`, [limit, offset], (err, res) => {
             if (err) {
-                callback(err);
-                console.log("error in trash mail", err);
-            }
-            if (res) {
-                callback(res);
+                console.error(err);
+                callback("Mail fetch error");
+            } else {
+                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE NOT tempdel = 1", (err, page) => {
+                    if (err) {
+                        console.error(err);
+                        callback("Mail count fetch error");
+                    } else {
+                        dbcon.query("SELECT count(*) AS totalCount FROM maildata WHERE `Read`=0 and tempdel=0", (err, result) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                const unreadCount = result[0].totalCount;
+                                console.log("Total count:", unreadCount);
+                                callback(null, { data: res, totalcount: page[0].totalCount,unreadcount:unreadCount });
+                            }
+                        });
+                        
+                    }
+                });
             }
         });
     },

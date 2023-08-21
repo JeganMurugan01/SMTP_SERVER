@@ -37,7 +37,6 @@ const usermaildata = {
                 throw error;
             }
         }
-
         try {
             let transporter = await createTestTransporter();
             const msg = {
@@ -124,8 +123,10 @@ const usermaildata = {
         });
     },
 
-    gettrashmail(error, callback) {
-        mailmodels.trashmail((err, res) => {
+    gettrashmail(req, callback) {
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.pageLimit)
+        mailmodels.trashmail(page, limit,(err, res) => {
             if (err) {
                 callback.send(err);
             }
