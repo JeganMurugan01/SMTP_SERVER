@@ -126,7 +126,7 @@ const mailmodels = {
                 console.error(err);
                 callback("Mail fetch error");
             } else {
-                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE NOT tempdel = 1", (err, page) => {
+                dbcon.query("SELECT COUNT(id) AS totalCount FROM maildata WHERE  tempdel = 1", (err, page) => {
                     if (err) {
                         console.error(err);
                         callback("Mail count fetch error");
