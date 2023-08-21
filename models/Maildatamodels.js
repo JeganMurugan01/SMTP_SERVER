@@ -53,6 +53,16 @@ const mailmodels = {
             }
         });
     },
+    gettrsabyid(id, callback) {
+        dbcon.query("SELECT * FROM maildata WHERE id = ? AND tempdel= 1", [id], (err, res) => {
+            if (err) {
+                console.error(err);
+                callback("Error fetching mail by ID");
+            } else {
+                callback(null, res);
+            }
+        });
+    },
     deletemail(id, callback) {
         dbcon.query("SELECT * FROM maildata WHERE id = ?", [id], (err, res) => {
             if (err) {

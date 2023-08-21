@@ -87,6 +87,17 @@ const usermaildata = {
             }
         });
     },
+    gettashbyidcontroller(req, response) {
+        const id = req.query.id;
+
+        mailmodels.gettrsabyid(id, (err, res) => {
+            if (err) {
+                response.status(500).send("Error fetching mail data");
+            } else {
+                response.send(res);
+            }
+        });
+    },
     deletemail(req, response) {
         const id = req.body.id;
         mailmodels.deletemail(id, (err, res) => {
