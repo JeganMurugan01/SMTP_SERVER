@@ -10,7 +10,7 @@ const mailfiltercontroller = {
                 response.status(400).send({ Error: "Something went wrong" });
             }
             if (data) {
-                response.status(200).send({ data });
+                response.status(200).send(data);
             }
         });
     },

@@ -4,18 +4,20 @@ const Emailfilter = {
     mailfilter(body, callback) {
         dbcon.query(
             `SELECT * FROM maildata
-            WHERE subject LIKE CONCAT("%", ?, "%") OR title LIKE CONCAT("%", ?, "%")ORDER BY id DESC;
+            WHERE subject LIKE CONCAT("%", ?, "%") OR title LIKE CONCAT("%", ?, "%")
+            ORDER BY id DESC;
             `,
             [body, body],
             (err, result) => {
                 if (!err) {
-                    if (result.length == 0) {
-                        callback(null, "No data data found");
+                    if (result.length === 0) {
+                        callback(null, { message: "No data found", count: 0 });
                     } else {
-                        if (result.length > 0) {
-                            callback(null, result);
-                        }
+                        const count = result.length;
+                        callback(null, {data:result, count:count});
                     }
+                } else {
+                    callback(err, null);
                 }
             }
         );
