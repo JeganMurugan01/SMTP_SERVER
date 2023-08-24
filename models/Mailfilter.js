@@ -4,7 +4,7 @@ const Emailfilter = {
     mailfilter(body, callback) {
         dbcon.query(
             `SELECT * FROM maildata
-            WHERE subject LIKE CONCAT("%", ?, "%") OR title LIKE CONCAT("%", ?, "%");
+            WHERE subject LIKE CONCAT("%", ?, "%") OR title LIKE CONCAT("%", ?, "%")ORDER BY id DESC;
             `,
             [body, body],
             (err, result) => {
