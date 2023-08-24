@@ -1,21 +1,21 @@
 const dbcon = require("../config/dbconfig.js");
 
 const Emailfilter = {
-    mailfilter(body, id, callback) {
+    mailfilter(body, callback) {
         dbcon.query(
-            `SELECT * FROM (
-                SELECT m.* FROM Login l
-                LEFT JOIN maildata m ON m.to = l.mailid
-                WHERE l.user_id = ?
-            ) AS subquery
-            WHERE subquery.subject LIKE CONCAT("%", ?, "%") OR subquery.title LIKE CONCAT("%", ?, "%");
+            `SELECT * FROM maildata
+            WHERE subject LIKE CONCAT("%", ?, "%") OR title LIKE CONCAT("%", ?, "%");
             `,
-            [id, body, body],
+            [body, body],
             (err, result) => {
-                if (err) {
-                    callback(err, null);
-                } else {
-                    callback(null, result);
+                if (!err) {
+                    if (result.length == 0) {
+                        callback(null, "No data data found");
+                    } else {
+                        if (result.length > 0) {
+                            callback(null, result);
+                        }
+                    }
                 }
             }
         );

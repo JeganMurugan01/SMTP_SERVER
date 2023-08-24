@@ -19,4 +19,8 @@ dbcon.getConnection((err, res) => {
     }
     if (err) throw err;
 });
-app.listen(localport, () => console.log(`http://localhost:${localport}`));
+if (process.env.NODE_ENV !== "test") {
+    app.listen(localport, () => console.log(`http://localhost:${localport}`));
+}
+
+module.exports = { app };

@@ -14,7 +14,6 @@ const usermaildata = {
             html: req.body.Html,
             title: req.body.Title,
             createdby: req.body.CreatedBy,
-            userid: req.body.userid,
         };
         async function createTestTransporter() {
             try {

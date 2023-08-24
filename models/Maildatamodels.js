@@ -44,15 +44,21 @@ const mailmodels = {
     },
 
     getbyid(id, callback) {
-        dbcon.query("SELECT * FROM maildata WHERE id = ? AND tempdel= 0", [id], (err, res) => {
+        dbcon.query("SELECT * FROM maildata WHERE id = ? AND tempdel = 0", [id], (err, res) => {
             if (err) {
                 console.error(err);
                 callback("Error fetching mail by ID");
             } else {
-                callback(null, res);
+                if (res.length === 0) {
+                    callback("Mail ID not found");
+                } else {
+                    console.log(res, "response");
+                    callback(null, res);
+                }
             }
         });
     },
+    
     gettrsabyid(id, callback) {
         const columns = ["id", "`from`", "`to`", "subject", "`Read`", "cc", "bcc", "html", "text", "title", "createdby"];
         const columnsStr = columns.join(", ");
@@ -61,7 +67,12 @@ const mailmodels = {
                 console.error(err);
                 callback("Error fetching mail by ID");
             } else {
-                callback(null, res);
+                if (res.length === 0) {
+                    callback("Mail ID not found");
+                } else {
+                    console.log(res, "response");
+                    callback(null, res);
+                }
             }
         });
     },
