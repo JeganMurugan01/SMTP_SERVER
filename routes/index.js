@@ -15,4 +15,5 @@ router.get("/trash", usermaildata.gettrashmail);
 router.delete("/deleteall", usermaildata.deletetrashmail);
 router.delete("/trashid",deletebytrashid.trashbyid)
 router.get('/trashid',usermaildata.gettashbyidcontroller)
+router.get('/filtermail',mailfiltercontroller.mailfilter)
 module.exports = router;

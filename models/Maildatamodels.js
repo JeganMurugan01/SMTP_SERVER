@@ -149,7 +149,7 @@ const mailmodels = {
                         console.error(err);
                         callback("Mail count fetch error");
                     } else {
-                        dbcon.query("SELECT count(*) AS totalCount FROM maildata WHERE `Read`=0 and tempdel=0", (err, result) => {
+                        dbcon.query("SELECT count(*) AS totalCount FROM maildata WHERE `Read`=0 and tempdel=1", (err, result) => {
                             if (err) {
                                 console.log(err);
                             } else {
@@ -167,7 +167,7 @@ const mailmodels = {
         dbcon.query("DELETE FROM maildata WHERE tempdel = 1", (err, res) => {
             if (err) {
                 callback(err);
-                console.log("deltetrash error ", err);
+                console.log("deletetrash error ", err);
             } else {
                 if (res.affectedRows > 0) {
                     callback({ data: "Deleted successfully" });
@@ -176,7 +176,8 @@ const mailmodels = {
                 }
             }
         });
-    },
+    }
+    
 };
 
 module.exports = { mailmodels };

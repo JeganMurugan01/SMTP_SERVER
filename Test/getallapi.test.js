@@ -4,9 +4,11 @@ const { app } = require("../app");
 describe("GET API TEST CASE", () => {
     let id;
     let trashid;
+    let page=1;
+    let pagelimit=5;
     it("Get mail data with pagination", async () => {
         await supertest(app)
-            .get("/api/mail?page=1&pageLimit=5")
+            .get(`/api/mail?page=${page}&pageLimit=${pagelimit}`)
             .expect((response) => {
                 id = response?.body?.data[0]?.id;
                 expect(response).toBeDefined();
@@ -15,6 +17,8 @@ describe("GET API TEST CASE", () => {
                 if (response?.body?.data.length > 0) {
                     expect(response?.body?.data[0].from && response?.body?.data[0].to && response?.body?.data[0].id).toBeDefined();
                 }
+                expect(response.body.data.length).toBe(pagelimit);
+                expect(response.body.data.length)
             });
     });
     it("Get mail data without pagination", async () => {
@@ -55,7 +59,7 @@ describe("GET API TEST CASE", () => {
     });
     it("Trash get api with data ", async () => {
         await supertest(app)
-            .get("/api/trash?page=2&pageLimit=20")
+            .get("/api/trash?page=1&pageLimit=20")
             .expect((response) => {
                 trashid = response?.body?.data[0]?.id;
                 expect(response).toBeDefined();
@@ -87,14 +91,13 @@ describe("GET API TEST CASE", () => {
     });
     it("without giving any data in Search Api call", async () => {
         await supertest(app)
-            .get(`/api/search?title="*"`)
+            .get(`/api/search?title=""`)
             .expect((response) => {
-                console.log(response.body.data, "response.body.data");
-                expect(response.body.data).toBeDefined();
-                expect(response.body.data).not.toBe(null);
-                expect(response.body.data).toEqual("No data data found");
+                expect(response.body.message).toBeDefined();
+                expect(response.body.message).not.toBe(null);
+                expect(response.body.message).toEqual("No data found");
                 expect(response?.statusCode).toBe(200);
-                expect(response.body.data).not.toBe([
+                expect(response.body.message).not.toBe([
                     {
                         id: 19,
                         from: "smaple@example.com",

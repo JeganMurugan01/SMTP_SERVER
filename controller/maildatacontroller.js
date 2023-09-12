@@ -53,7 +53,7 @@ const usermaildata = {
                 console.log("Message sent: %s", info.messageId);
                 console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 mailmodels.sendingmail(maildatareq, (res) => {
-                    response.status(200).send({ Response: res });
+                    response.status(200).send({ Data: res });
                 });
             } else {
                 response.status(400).send({ error: "Check the given data " });
@@ -66,8 +66,8 @@ const usermaildata = {
     getmaildata(req, res) {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.pageLimit);
-        const sortorder = req.query.sortorder
-                mailmodels.getmaildatadb(sortorder,page, limit,(err, Result) => {
+        const sortorder = req.query.sortorder;
+        mailmodels.getmaildatadb(sortorder, page, limit, (err, Result) => {
             if (err) {
                 res.send("Mail fetch error");
             } else {
@@ -114,19 +114,18 @@ const usermaildata = {
             Read: req.body.Read,
         };
         mailmodels.updatemail(body, (error, result) => {
-            console.log(result, error, "result");
             if (error) {
                 response.status(400).send(error);
             } else {
-                response.status(200).send({ data: result });
+                response.status(200).send(result);
             }
         });
     },
 
     gettrashmail(req, callback) {
-        const page = parseInt(req.query.page)
-        const limit = parseInt(req.query.pageLimit)
-        mailmodels.trashmail(page, limit,(err, res) => {
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.pageLimit);
+        mailmodels.trashmail(page, limit, (err, res) => {
             if (err) {
                 callback.send(err);
             }

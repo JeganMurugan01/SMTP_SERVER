@@ -1,11 +1,13 @@
-const mysql= require('mysql2')
+var mysql = require("mysql2");
+require("iconv-lite").encodingExists("foo");
+const dotenv = require("dotenv");
+dotenv.config();
+const dbcon = mysql.createPool({
+    host: process.env.HOST,
+    database: process.env.DB,
+    user: process.env.USER_NAME,
+    password: process.env.PASSWORD,
+    connectionLimit: 10,
+});
 
- const dbcon=mysql.createPool({
-    host: 'localhost',
-    database:"SMTP",
-    user: 'root',
-    password:'root',
-    connectionLimit:10,
-})
-
-module.exports = dbcon
+module.exports = dbcon;
