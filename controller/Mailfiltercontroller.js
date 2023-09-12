@@ -4,8 +4,6 @@ const mailfiltercontroller = {
     filter(req, response) {
         const subject = req.query.title;
         Emailfilter.mailfilter(subject, (err, data) => {
-            console.log(data, "response search");
-            console.log(err, "response err");
             if (err) {
                 response.status(400).send({ Error: "Something went wrong" });
             }
@@ -16,7 +14,7 @@ const mailfiltercontroller = {
     },
     mailfilter(req,response)
     {
-        const mailid= req.query.mailid
+        const mailid= req.query.email
         Emailfilter.filterwithEmail(mailid,(err,data)=>{
             if (err) {
                 response.status(500).send(err);
