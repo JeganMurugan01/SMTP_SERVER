@@ -12,18 +12,15 @@ const mailfiltercontroller = {
             }
         });
     },
-    mailfilter(req,response)
-    {
-        const mailid= req.query.email
-        Emailfilter.filterwithEmail(mailid,(err,data)=>{
+    mailfilter(req, response) {
+        const mailid = req.query.email;
+        Emailfilter.filterwithEmail(mailid, (err, data) => {
             if (err) {
                 response.status(500).send(err);
-            }
-            else if(data)
-            {
+            } else if (data) {
                 response.status(200).send(data);
             }
-        })
-    }
+        });
+    },
 };
 module.exports = { mailfiltercontroller };

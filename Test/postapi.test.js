@@ -3,7 +3,7 @@ const { app } = require("../app");
 
 describe("Trash API", () => {
     const mailid = "Testcasemail@gmail.com";
-    let id;
+    let id ;
     it("Post mail api call ", async () => {
         const body = {
             From: "Testcasemail@gmail.com",
@@ -16,6 +16,7 @@ describe("Trash API", () => {
             Title: "Leave Application",
             CreatedBy: "2023-08-30 17:45:00",
         };
+
         await supertest(app)
             .post("/api/mail")
             .set("Accept", "application/json")
@@ -31,8 +32,9 @@ describe("Trash API", () => {
 
     it("Search Api call", async () => {
         await supertest(app)
-            .get(`/api/filtermail?mailid=${mailid}`)
+            .get(`/api/filtermail?email=${mailid}`)
             .expect((response) => {
+                console.log(response, "response from the filter by mail id ");
                 id = response.body[0].id;
                 expect(response.body).toBeDefined();
                 expect(response.body.length).toBeGreaterThan(0);
@@ -54,8 +56,8 @@ describe("Trash API", () => {
             .expect((response) => {
                 expect(response.body.data).toBeDefined();
                 expect(response.statusCode).toBe(200);
-                expect(response.body.data).toBe("Updated successfully!")
-                expect(response.body.data).not.toBe(null||"")
+                expect(response.body.data).toBe("Updated successfully!");
+                expect(response.body.data).not.toBe(null || "");
             });
     });
     it("Status update using PUT API call id  with null ", async () => {
@@ -69,8 +71,8 @@ describe("Trash API", () => {
             .expect((response) => {
                 expect(response?.body?.error).toBeDefined();
                 expect(response.statusCode).toBe(400);
-                expect(response?.body?.error).toBe("No data found for the given id.")
-                expect(response?.body?.error).not.toBe(null||"")
+                expect(response?.body?.error).toBe("No data found for the given id.");
+                expect(response?.body?.error).not.toBe(null || "");
             });
     });
 
@@ -89,7 +91,7 @@ describe("Trash API", () => {
     });
 
     it("Delete mail by email id", async () => {
-        console.log(id, "id ");
+        console.log(id, "Trash by id ");
         await supertest(app)
             .delete(`/api/trashid`)
             .send({ id })
