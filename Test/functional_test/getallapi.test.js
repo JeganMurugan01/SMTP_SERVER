@@ -1,5 +1,5 @@
 const supertest = require("supertest");
-const { app } = require("../app");
+const { app } = require("../../app");
 
 describe("GET API TEST CASE", () => {
     let id;
